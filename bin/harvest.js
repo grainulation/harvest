@@ -126,7 +126,7 @@ function loadSingleSprint(dir) {
     const { execSync } = require('node:child_process');
     sprint.gitLog = execSync(
       `git log --oneline --format="%H|%ai|%s" -- claims.json`,
-      { cwd: dir, encoding: 'utf8', timeout: 5000 }
+      { cwd: dir, encoding: 'utf8', timeout: 5000, stdio: ['pipe', 'pipe', 'pipe'] }
     ).trim().split('\n').filter(Boolean).map(line => {
       const [hash, date, ...msg] = line.split('|');
       return { hash, date, message: msg.join('|') };
