@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>harvest — Learn from every decision you've made</title>
 <meta name="description" content="Cross-sprint analytics, prediction calibration, and retrospective reports. Find out if your decisions are getting better.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="harvest — Learn from every decision you've made">
+<meta property="og:description" content="Cross-sprint analytics, prediction calibration, and retrospective reports. Find out if your decisions are getting better.">
+<meta property="og:url" content="https://grainulator.github.io/harvest/">
+<link rel="canonical" href="https://grainulator.github.io/harvest/">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%2309090b'/><text x='32' y='48' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='800' font-size='44' fill='%23f97316'>h</text></svg>">
 <style>
 :root {
@@ -134,7 +139,7 @@ footer a{color:var(--text-2)}
       <a href="#quickstart">Quick Start</a>
       <a href="#example">Example</a>
       <a href="#features">Features</a>
-      <a href="https://github.com/aid-ninja/harvest" class="nav-cta">GitHub</a>
+      <a href="https://github.com/grainulator/harvest" class="nav-cta">GitHub</a>
     </div>
   </div>
 </nav>
@@ -162,8 +167,8 @@ footer a{color:var(--text-2)}
         <h3>Analyze sprints</h3>
         <p>Point harvest at your sprints directory. It reads all claims and calculates accuracy metrics.</p>
         <div class="copy-wrap">
-          <div class="qs-code"><span class="dim">$</span> harvest analyze ./sprints/</div>
-          <button class="copy-btn" onclick="copyText(this,'harvest analyze ./sprints/')">Copy</button>
+          <div class="qs-code"><span class="dim">$</span> npx @grainulator/harvest analyze ./sprints/</div>
+          <button class="copy-btn" onclick="copyText(this,'npx @grainulator/harvest analyze ./sprints/')">Copy</button>
         </div>
       </div>
       <div class="qs-step rv rv-d2">
@@ -171,8 +176,8 @@ footer a{color:var(--text-2)}
         <h3>Calibrate predictions</h3>
         <p>Compare what you predicted with what actually happened. Score your accuracy over time.</p>
         <div class="copy-wrap">
-          <div class="qs-code"><span class="dim">$</span> harvest calibrate ./sprints/ --outcomes results.json</div>
-          <button class="copy-btn" onclick="copyText(this,'harvest calibrate ./sprints/ --outcomes results.json')">Copy</button>
+          <div class="qs-code"><span class="dim">$</span> npx @grainulator/harvest calibrate ./sprints/ --outcomes results.json</div>
+          <button class="copy-btn" onclick="copyText(this,'npx @grainulator/harvest calibrate ./sprints/ --outcomes results.json')">Copy</button>
         </div>
       </div>
       <div class="qs-step rv rv-d3">
@@ -180,8 +185,8 @@ footer a{color:var(--text-2)}
         <h3>Generate report</h3>
         <p>Produce a self-contained HTML retrospective you can share with the team.</p>
         <div class="copy-wrap">
-          <div class="qs-code"><span class="dim">$</span> harvest report ./sprints/ -o retro.html</div>
-          <button class="copy-btn" onclick="copyText(this,'harvest report ./sprints/ -o retro.html')">Copy</button>
+          <div class="qs-code"><span class="dim">$</span> npx @grainulator/harvest report ./sprints/ -o retro.html</div>
+          <button class="copy-btn" onclick="copyText(this,'npx @grainulator/harvest report ./sprints/ -o retro.html')">Copy</button>
         </div>
       </div>
     </div>
@@ -197,7 +202,7 @@ footer a{color:var(--text-2)}
     <p class="section-sub rv rv-d2">You have 5 completed sprints with outcomes recorded. Harvest tells you how your predictions held up.</p>
 
     <div class="term-block rv rv-d3">
-<span class="prompt">$</span> <span class="cmd">harvest analyze ./sprints/</span>
+<span class="prompt">$</span> <span class="cmd">npx @grainulator/harvest analyze ./sprints/</span>
 
 <span class="output">  Scanning 5 sprints, 127 total claims...</span>
 
@@ -209,7 +214,7 @@ footer a{color:var(--text-2)}
 <span class="output">  perf-baseline          41     <span class="warn">61%</span>       0.82</span>
 <span class="output">  mobile-rewrite         18     <span class="success">89%</span>       0.65</span>
 
-<span class="prompt">$</span> <span class="cmd">harvest calibrate ./sprints/ --outcomes results.json</span>
+<span class="prompt">$</span> <span class="cmd">npx @grainulator/harvest calibrate ./sprints/ --outcomes results.json</span>
 
 <span class="output">  Calibration scores:</span>
 <span class="output">  <span class="hl">Overconfident:</span> perf-baseline (predicted 0.82 avg, hit 61%)</span>
@@ -217,7 +222,7 @@ footer a{color:var(--text-2)}
 <span class="output">  <span class="hl">Pattern:</span> Sprints with /challenge usage have +12% accuracy</span>
 <span class="output">  <span class="warn">Warning:</span> 8 claims from auth-scaling are >90 days old -- consider refreshing</span>
 
-<span class="prompt">$</span> <span class="cmd">harvest report ./sprints/ -o retro.html</span>
+<span class="prompt">$</span> <span class="cmd">npx @grainulator/harvest report ./sprints/ -o retro.html</span>
 <span class="success">  Written: retro.html (self-contained, dark theme, 6 charts)</span>
     </div>
   </div>
@@ -286,19 +291,19 @@ footer a{color:var(--text-2)}
     <h2 class="section-title rv rv-d1">The learning layer</h2>
     <p class="section-sub rv rv-d2" style="margin-left:auto;margin-right:auto">Wheat creates decisions. Harvest measures whether they were right.</p>
     <div class="eco-grid rv rv-d3">
-      <a href="https://github.com/aid-ninja/wheat" class="eco-chip"><span class="eco-dot" style="background:#fbbf24"></span>wheat -- research sprints</a>
-      <a href="https://github.com/aid-ninja/farmer" class="eco-chip"><span class="eco-dot" style="background:#22c55e"></span>farmer -- permission dashboard</a>
-      <a href="https://github.com/aid-ninja/grove" class="eco-chip"><span class="eco-dot" style="background:#10b981"></span>grove -- shared tools</a>
-      <a href="https://github.com/aid-ninja/mill" class="eco-chip"><span class="eco-dot" style="background:#d97706"></span>mill -- export &amp; publish</a>
-      <a href="https://github.com/aid-ninja/silo" class="eco-chip"><span class="eco-dot" style="background:#3b82f6"></span>silo -- knowledge packs</a>
-      <a href="https://github.com/aid-ninja/field" class="eco-chip"><span class="eco-dot" style="background:#a16207"></span>field -- orchestration</a>
+      <a href="https://grainulator.github.io/wheat/" class="eco-chip"><span class="eco-dot" style="background:#fbbf24"></span>wheat -- research sprints</a>
+      <a href="https://grainulator.github.io/farmer/" class="eco-chip"><span class="eco-dot" style="background:#22c55e"></span>farmer -- permission dashboard</a>
+      <a href="https://grainulator.github.io/grove/" class="eco-chip"><span class="eco-dot" style="background:#10b981"></span>grove -- shared tools</a>
+      <a href="https://grainulator.github.io/mill/" class="eco-chip"><span class="eco-dot" style="background:#d97706"></span>mill -- export &amp; publish</a>
+      <a href="https://grainulator.github.io/silo/" class="eco-chip"><span class="eco-dot" style="background:#3b82f6"></span>silo -- knowledge packs</a>
+      <a href="https://grainulator.github.io/field/" class="eco-chip"><span class="eco-dot" style="background:#a16207"></span>field -- orchestration</a>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="container">
-    <p>harvest &middot; MIT License &middot; <a href="https://github.com/aid-ninja/harvest">GitHub</a> &middot; <a href="https://github.com/aid-ninja/harvest#readme">Docs</a></p>
+    <p>harvest &middot; MIT License &middot; <a href="https://github.com/grainulator/harvest">GitHub</a> &middot; <a href="https://github.com/grainulator/harvest#readme">Docs</a></p>
   </div>
 </footer>
 
