@@ -203,6 +203,11 @@ async function main() {
     },
   };
 
+  if (opts.command === 'help') {
+    console.log(USAGE);
+    process.exit(0);
+  }
+
   if (!commands[opts.command]) {
     console.error(`Unknown command: ${opts.command}`);
     console.error(`Run "harvest --help" for usage.`);

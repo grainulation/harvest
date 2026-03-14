@@ -18,8 +18,15 @@
     "calibration",
     "decisions"
   ],
-  "author": "",
+  "author": "grainulator contributors",
   "license": "MIT",
+  "files": [
+    "bin/",
+    "lib/",
+    "templates/",
+    "README.md",
+    "LICENSE"
+  ],
   "engines": {
     "node": ">=18.0.0"
   }
