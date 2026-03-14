@@ -36,14 +36,14 @@
 <section class="what-is" id="what"><div class="container"><div class="what-box rv"><h2>What is harvest?</h2><p>Wheat is a research framework where you collect evidence-graded "claims" to make technical decisions. After you have done several sprints, you have a history of predictions and outcomes. Harvest reads that history and tells you which kinds of claims tend to be right, where you are overconfident, and whether using adversarial review (/challenge) actually improves accuracy. It is the feedback loop that turns individual sprints into an organizational learning system.</p></div></div></section>
 <hr class="sep">
 <section class="quickstart" id="quickstart"><div class="container"><div class="qs-label rv">Quick start -- 3 commands</div><div class="qs-steps">
-  <div class="qs-step rv rv-d1"><div class="qs-num">1</code></pre><h3>Analyze sprints</h3><p>Point harvest at your sprints directory. It reads all claims and calculates accuracy metrics.</p><div class="copy-wrap"><pre class="qs-code"><code><span class="dim">$</span> harvest analyze ./sprints/</div><button class="copy-btn" onclick="copyText(this,'harvest analyze ./sprints/')">Copy</button></div><div class="qs-output">Scanning 5 sprints, 127 total claims...
+  <div class="qs-step rv rv-d1"><div class="qs-num">1</code></pre><h3>Analyze sprints</h3><p>Point harvest at your sprints directory. It reads all claims and calculates accuracy metrics.</p><div class="copy-wrap"><pre class="qs-code"><code><span class="dim">$</span> npx @grainulator/harvest analyze ./sprints/</div><button class="copy-btn" onclick="copyText(this,'npx @grainulator/harvest analyze ./sprints/')">Copy</button></div><div class="qs-output">Scanning 5 sprints, 127 total claims...
   graphql-migration:  82% accuracy
   auth-scaling:       78% accuracy
   perf-baseline:      61% accuracy</div></div>
-  <div class="qs-step rv rv-d2"><div class="qs-num">2</code></pre><h3>Calibrate predictions</h3><p>Compare predictions against actual outcomes. Score your accuracy over time.</p><div class="copy-wrap"><pre class="qs-code"><code><span class="dim">$</span> harvest calibrate ./sprints/ --outcomes results.json</div><button class="copy-btn" onclick="copyText(this,'harvest calibrate ./sprints/ --outcomes results.json')">Copy</button></div><div class="qs-output">Overconfident: perf-baseline (predicted 0.82, hit 61%)
+  <div class="qs-step rv rv-d2"><div class="qs-num">2</code></pre><h3>Calibrate predictions</h3><p>Compare predictions against actual outcomes. Score your accuracy over time.</p><div class="copy-wrap"><pre class="qs-code"><code><span class="dim">$</span> npx @grainulator/harvest calibrate ./sprints/ --outcomes results.json</div><button class="copy-btn" onclick="copyText(this,'npx @grainulator/harvest calibrate ./sprints/ --outcomes results.json')">Copy</button></div><div class="qs-output">Overconfident: perf-baseline (predicted 0.82, hit 61%)
 Well-calibrated: mobile-rewrite, data-pipeline
 Pattern: /challenge usage = +12% accuracy</div></div>
-  <div class="qs-step rv rv-d3"><div class="qs-num">3</code></pre><h3>Generate report</h3><p>Produce a self-contained HTML retrospective with charts.</p><div class="copy-wrap"><pre class="qs-code"><code><span class="dim">$</span> harvest report ./sprints/ -o retro.html</div><button class="copy-btn" onclick="copyText(this,'harvest report ./sprints/ -o retro.html')">Copy</button></div><div class="qs-output">Written: retro.html
+  <div class="qs-step rv rv-d3"><div class="qs-num">3</code></pre><h3>Generate report</h3><p>Produce a self-contained HTML retrospective with charts.</p><div class="copy-wrap"><pre class="qs-code"><code><span class="dim">$</span> npx @grainulator/harvest report ./sprints/ -o retro.html</div><button class="copy-btn" onclick="copyText(this,'npx @grainulator/harvest report ./sprints/ -o retro.html')">Copy</button></div><div class="qs-output">Written: retro.html
   Self-contained, dark theme, 6 charts
   Share with the team or attach to wiki.</div></div>
 </div></div></section>
@@ -60,7 +60,7 @@ Pattern: /challenge usage = +12% accuracy</div></div>
     <div class="bar-group"><div class="bar" style="height:142px;background:var(--green)"></div><div class="bar-value" style="color:var(--green)">89%</div><div class="bar-label">mobile</div></div>
   </div>
   <div class="term-block rv rv-d4" style="margin-top:24px">
-<span class="prompt">$</span> <span class="cmd">harvest calibrate ./sprints/ --outcomes results.json</span>
+<span class="prompt">$</span> <span class="cmd">npx @grainulator/harvest calibrate ./sprints/ --outcomes results.json</span>
 
 <span class="output">  Calibration scores:</span>
 <span class="output">  <span class="hl">Overconfident:</span> perf-baseline (predicted 0.82 avg, hit 61%)</span>
