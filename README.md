@@ -1,4 +1,4 @@
-# @grainulator/harvest
+# @grainulation/harvest
 
 **Are your decisions getting better?**
 
@@ -18,13 +18,13 @@ Learn from every decision you've made.
 ## Install
 
 ```sh
-npm install @grainulator/harvest
+npm install @grainulation/harvest
 ```
 
 Or run directly:
 
 ```sh
-npx @grainulator/harvest analyze ./sprints/
+npx @grainulation/harvest analyze ./sprints/
 ```
 
 ## Usage
