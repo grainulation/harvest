@@ -12,6 +12,13 @@ const { checkDecay } = require('../lib/decay.js');
 const { measureVelocity } = require('../lib/velocity.js');
 const { generateReport } = require('../lib/report.js');
 
+const verbose = process.argv.includes('--verbose') || process.argv.includes('-v');
+function vlog(...a) {
+  if (!verbose) return;
+  const ts = new Date().toISOString();
+  process.stderr.write(`[${ts}] harvest: ${a.join(' ')}\n`);
+}
+
 const USAGE = `
 harvest -- learn from every decision you've made
 
@@ -59,7 +66,7 @@ function parseArgs(argv) {
 
 function loadSprintData(dir) {
   if (!dir || !fs.existsSync(dir)) {
-    console.error(`Error: directory not found: ${dir}`);
+    console.error(`harvest: directory not found: ${dir}`);
     process.exit(1);
   }
 
@@ -85,7 +92,7 @@ function loadSprintData(dir) {
   }
 
   if (sprints.length === 0) {
-    console.error(`Error: no sprint data found in ${dir}`);
+    console.error(`harvest: no sprint data found in ${dir}`);
     console.error('Expected claims.json in the directory or its subdirectories.');
     process.exit(1);
   }
@@ -110,7 +117,7 @@ function loadSingleSprint(dir) {
       sprint.claims = sprint.claims.claims || [];
     }
   } catch (e) {
-    console.error(`Warning: could not parse ${claimsPath}: ${e.message}`);
+    console.error(`harvest: could not parse ${claimsPath}: ${e.message}`);
   }
 
   const compilationPath = path.join(dir, 'compilation.json');
@@ -151,6 +158,7 @@ function output(result, opts) {
 
 async function main() {
   const opts = parseArgs(process.argv);
+  vlog('startup', `command=${opts.command || '(none)'}`, `dir=${opts.dir || 'none'}`);
 
   const commands = {
     analyze() {
@@ -232,7 +240,7 @@ async function main() {
     child.stdout && child.stdout.pipe(process.stdout);
     child.stderr && child.stderr.pipe(process.stderr);
     child.on('error', (err) => {
-      console.error(`Error starting server: ${err.message}`);
+      console.error(`harvest: error starting server: ${err.message}`);
       process.exit(1);
     });
     child.on('exit', (code) => process.exit(code || 0));
@@ -240,7 +248,7 @@ async function main() {
   }
 
   if (!commands[opts.command]) {
-    console.error(`Unknown command: ${opts.command}`);
+    console.error(`harvest: unknown command: ${opts.command}`);
     console.error(`Run "harvest --help" for usage.`);
     process.exit(1);
   }
