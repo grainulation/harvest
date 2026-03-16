@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-tool="harvest">
+<html lang="en" dir="auto" data-tool="harvest">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -49,11 +49,11 @@ body {
 .conn-dot.disconnected { background: var(--red); }
 .reconnect-banner { position:fixed;top:0;left:0;right:0;z-index:9999;padding:8px 16px;background:#92400e;color:#fbbf24;font-size:12px;text-align:center;transform:translateY(-100%);transition:transform .3s;font-family:system-ui,sans-serif }
 .reconnect-banner.visible { transform:translateY(0) }
-.reconnect-banner button { background:none;border:1px solid #fbbf24;color:#fbbf24;padding:2px 10px;border-radius:4px;cursor:pointer;font-size:11px;margin-left:8px }
+.reconnect-banner button { background:none;border:1px solid #fbbf24;color:#fbbf24;padding:2px 10px;border-radius:4px;cursor:pointer;font-size:11px;margin-inline-start:8px }
 
 /* ── sprint selector ── */
 .sprint-selector {
-  display: flex; align-items: center; gap: var(--space-sm); margin-left: auto;
+  display: flex; align-items: center; gap: var(--space-sm); margin-inline-start: auto;
 }
 .sprint-selector select {
   padding: 6px 10px; border-radius: var(--radius);
@@ -109,17 +109,17 @@ body {
   display: flex; align-items: center; gap: var(--space-md);
 }
 .bar-label {
-  width: 100px; text-align: right; font-size: 11px; color: var(--fg2);
+  width: 100px; text-align: end; font-size: 11px; color: var(--fg2);
   flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .bar-track { flex: 1; height: 20px; background: var(--bg); border-radius: var(--radius-sm); overflow: hidden; }
 .bar-fill {
   height: 100%; border-radius: var(--radius-sm);
   transition: width 0.3s ease;
-  display: flex; align-items: center; padding-left: 6px;
+  display: flex; align-items: center; padding-inline-start: 6px;
   font-size: 10px; color: var(--bg); font-weight: 600; min-width: 24px;
 }
-.bar-count { font-size: 10px; color: var(--fg3); width: 36px; text-align: right; flex-shrink: 0; }
+.bar-count { font-size: 10px; color: var(--fg3); width: 36px; text-align: end; flex-shrink: 0; }
 
 /* bar colors by type */
 .bar-fill.constraint { background: #f87171; }
@@ -150,10 +150,10 @@ body {
 .decay-list { display: flex; flex-direction: column; gap: var(--space-sm); }
 .decay-alert {
   padding: var(--space-md); background: var(--bg);
-  border-radius: var(--radius); border-left: 3px solid var(--red);
+  border-radius: var(--radius); border-inline-start: 3px solid var(--red);
 }
-.decay-alert.stale { border-left-color: var(--orange); }
-.decay-alert.unresolved { border-left-color: var(--purple); }
+.decay-alert.stale { border-inline-start-color: var(--orange); }
+.decay-alert.unresolved { border-inline-start-color: var(--purple); }
 .decay-alert .da-header {
   display: flex; align-items: center; gap: var(--space-sm);
   font-size: 11px; color: var(--fg2); margin-bottom: 4px;
@@ -178,7 +178,7 @@ body {
 .empty-state p { font-size: 12px; max-width: 400px; margin: 0 auto; }
 
 /* ── A11y ── */
-.skip-link{position:absolute;top:-40px;left:0;background:var(--accent);color:#000;padding:8px 16px;z-index:10000;font-size:14px;font-weight:600;transition:top .2s}
+.skip-link{position:absolute;top:-40px;inset-inline-start:0;background:var(--accent);color:#000;padding:8px 16px;z-index:10000;font-size:14px;font-weight:600;transition:top .2s}
 .skip-link:focus{top:0}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 @media (prefers-reduced-motion: reduce) {
@@ -188,7 +188,7 @@ body {
 /* ── responsive ── */
 @media (max-width: 768px) {
   .topbar { flex-wrap: wrap; padding: var(--space-md); }
-  .sprint-selector { margin-left: 0; width: 100%; }
+  .sprint-selector { margin-inline-start: 0; width: 100%; }
   .dashboard { padding: var(--space-lg); }
   .cards { grid-template-columns: repeat(2, 1fr); }
 }
@@ -221,6 +221,9 @@ body {
 (function() {
   'use strict';
 
+  // ── i18n passthrough ──
+  const t = (s, v) => v ? s.replace(/\{(\w+)\}/g, (_, k) => v[k] ?? k) : s;
+
   const API = '';
   let sprints = [];
   let selectedSprint = '__all';
@@ -231,11 +234,11 @@ body {
   function showBanner(count) {
     const b = document.getElementById('reconnectBanner');
     if (count > 5) {
-      b.innerHTML = 'Connection lost. <button onclick="sseRetryCount=0;connectSSE()">Retry now</button>';
+      b.innerHTML = t('Connection lost.') + ' <button onclick="sseRetryCount=0;connectSSE()">' + t('Retry now') + '</button>';
     } else if (count > 1) {
-      b.textContent = 'Reconnecting (attempt ' + count + ')...';
+      b.textContent = t('Reconnecting (attempt {count})...', { count });
     } else {
-      b.textContent = 'Reconnecting...';
+      b.textContent = t('Reconnecting...');
     }
     b.classList.add('visible');
   }
@@ -292,7 +295,7 @@ body {
   async function loadDashboard() {
     const db = document.getElementById('main-content');
     if (sprints.length === 0) {
-      db.innerHTML = '<div class="empty-state"><h2>No Sprints Found</h2><p>No claims.json files found in the root directory. Start harvest with --root pointing to a sprints directory.</p></div>';
+      db.innerHTML = '<div class="empty-state"><h2>' + t('No Sprints Found') + '</h2><p>' + t('No claims.json files found in the root directory. Start harvest with --root pointing to a sprints directory.') + '</p></div>';
       return;
     }
 
@@ -305,7 +308,7 @@ body {
 
   async function loadFullDashboard() {
     const db = document.getElementById('main-content');
-    db.innerHTML = '<div style="padding:40px;color:var(--fg3);">Analyzing...</div>';
+    db.innerHTML = '<div style="padding:40px;color:var(--fg3);">' + t('Analyzing...') + '</div>';
 
     try {
       const [dashRes, decayRes, calRes] = await Promise.all([
@@ -325,7 +328,7 @@ body {
 
   async function loadSprintAnalysis(name) {
     const db = document.getElementById('main-content');
-    db.innerHTML = '<div style="padding:40px;color:var(--fg3);">Analyzing...</div>';
+    db.innerHTML = '<div style="padding:40px;color:var(--fg3);">' + t('Analyzing...') + '</div>';
 
     try {
       const res = await fetch(API + '/api/analysis/' + encodeURIComponent(name));
@@ -353,7 +356,7 @@ body {
     const velocity = dash.velocity;
 
     if (!analysis) {
-      db.innerHTML = '<div class="empty-state"><h2>No Data</h2><p>No analysis data available for the selected sprint(s).</p></div>';
+      db.innerHTML = '<div class="empty-state"><h2>' + t('No Data') + '</h2><p>' + t('No analysis data available for the selected sprint(s).') + '</p></div>';
       return;
     }
 
@@ -365,30 +368,30 @@ body {
 
     // ── Summary cards ──
     html += '<div class="cards">';
-    html += metricCard('Total Sprints', dash.sprintCount, 'sprints analyzed');
-    html += metricCard('Total Claims', dash.totalClaims, `${summary.averageClaimsPerSprint || 0} avg per sprint`);
-    html += metricCard('Claims/Day', velSummary.avgClaimsPerDay || '--', velSummary.avgDurationDays ? `${velSummary.avgDurationDays}d avg duration` : 'no timing data');
-    html += metricCard('Decay Alerts', (decaySummary.staleCount || 0) + (decaySummary.decayingCount || 0) + (decaySummary.unresolvedCount || 0), `${decaySummary.thresholdDays || 30}d threshold`);
+    html += metricCard(t('Total Sprints'), dash.sprintCount, t('sprints analyzed'));
+    html += metricCard(t('Total Claims'), dash.totalClaims, t('{avg} avg per sprint', { avg: summary.averageClaimsPerSprint || 0 }));
+    html += metricCard(t('Claims/Day'), velSummary.avgClaimsPerDay || '--', velSummary.avgDurationDays ? t('{days}d avg duration', { days: velSummary.avgDurationDays }) : t('no timing data'));
+    html += metricCard(t('Decay Alerts'), (decaySummary.staleCount || 0) + (decaySummary.decayingCount || 0) + (decaySummary.unresolvedCount || 0), t('{days}d threshold', { days: decaySummary.thresholdDays || 30 }));
     html += '</div>';
 
     // ── Type distribution chart ──
-    html += '<div class="section"><div class="section-title">Claim Type Distribution</div>';
+    html += '<div class="section"><div class="section-title">' + t('Claim Type Distribution') + '</div>';
     html += renderBarChart(analysis.typeDistribution || {}, dash.totalClaims, 'type');
     html += '</div>';
 
     // ── Evidence quality chart ──
-    html += '<div class="section"><div class="section-title">Evidence Quality Breakdown</div>';
+    html += '<div class="section"><div class="section-title">' + t('Evidence Quality Breakdown') + '</div>';
     html += renderBarChart(analysis.evidenceDistribution || {}, dash.totalClaims, 'evidence');
     html += '</div>';
 
     // ── Velocity ──
     if (velocity && velocity.sprints && velocity.sprints.length > 0) {
-      html += '<div class="section"><div class="section-title">Sprint Velocity</div>';
+      html += '<div class="section"><div class="section-title">' + t('Sprint Velocity') + '</div>';
       html += '<div class="velocity-grid">';
-      html += velocityItem(velSummary.avgDurationDays || '--', 'Avg Duration (days)');
-      html += velocityItem(velSummary.avgClaimsPerDay || '--', 'Avg Claims/Day');
-      html += velocityItem(velSummary.totalStalls || 0, 'Total Stalls');
-      html += velocityItem(velSummary.sprintsAnalyzed || 0, 'Sprints Analyzed');
+      html += velocityItem(velSummary.avgDurationDays || '--', t('Avg Duration (days)'));
+      html += velocityItem(velSummary.avgClaimsPerDay || '--', t('Avg Claims/Day'));
+      html += velocityItem(velSummary.totalStalls || 0, t('Total Stalls'));
+      html += velocityItem(velSummary.sprintsAnalyzed || 0, t('Sprints Analyzed'));
       html += '</div>';
       if (velocity.insight) {
         html += `<div style="margin-top:var(--space-lg);font-size:12px;color:var(--fg2);padding:var(--space-md);background:var(--bg);border-radius:var(--radius);">${esc(velocity.insight)}</div>`;
@@ -404,9 +407,9 @@ body {
         ...(decay.unresolved || []).map(d => ({ ...d, severity: 'unresolved' })),
       ];
 
-      html += '<div class="section"><div class="section-title">Decay Alerts (' + alerts.length + ')</div>';
+      html += '<div class="section"><div class="section-title">' + t('Decay Alerts') + ' (' + alerts.length + ')</div>';
       if (alerts.length === 0) {
-        html += '<div style="padding:var(--space-lg);color:var(--fg3);font-size:12px;text-align:center;">No decay detected. Knowledge base looks fresh.</div>';
+        html += '<div style="padding:var(--space-lg);color:var(--fg3);font-size:12px;text-align:center;">' + t('No decay detected. Knowledge base looks fresh.') + '</div>';
       } else {
         html += '<div class="decay-list">';
         for (const a of alerts.slice(0, 20)) {
@@ -434,7 +437,7 @@ body {
 
     // ── Monocultures ──
     if (analysis.monocultures && analysis.monocultures.length > 0) {
-      html += '<div class="section"><div class="section-title">Type Monocultures</div>';
+      html += '<div class="section"><div class="section-title">' + t('Type Monocultures') + '</div>';
       html += '<div style="font-size:12px;color:var(--fg2);">';
       for (const m of analysis.monocultures) {
         html += `<div style="padding:var(--space-sm) 0;">Sprint <strong>${esc(m.sprint)}</strong>: ${m.ratio}% ${esc(m.dominantType)}</div>`;
