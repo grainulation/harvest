@@ -1,10 +1,22 @@
 # @grainulation/harvest
 
+[![npm version](https://img.shields.io/npm/v/@grainulation/harvest)](https://www.npmjs.com/package/@grainulation/harvest) [![npm downloads](https://img.shields.io/npm/dm/@grainulation/harvest)](https://www.npmjs.com/package/@grainulation/harvest) [![license](https://img.shields.io/npm/l/@grainulation/harvest)](https://github.com/grainulation/harvest/blob/main/LICENSE) [![node](https://img.shields.io/node/v/@grainulation/harvest)](https://nodejs.org) [![CI](https://github.com/grainulation/harvest/actions/workflows/ci.yml/badge.svg)](https://github.com/grainulation/harvest/actions)
+
 **Are your decisions getting better?**
 
-Harvest is the analytics and retrospective layer for research sprints. It looks across sprints to find patterns, score predictions, and surface knowledge that's gone stale.
+Harvest is the analytics layer for research sprints. It looks across sprints to find patterns, score predictions, and surface knowledge that's gone stale.
 
-Learn from every decision you've made.
+## Install
+
+```bash
+npm install -g @grainulation/harvest
+```
+
+Or use directly:
+
+```bash
+npx @grainulation/harvest analyze ./sprints/
+```
 
 ## What it does
 
@@ -15,21 +27,9 @@ Learn from every decision you've made.
 - **Sprint velocity** -- how long do sprints take, where do they stall?
 - **Retrospective reports** -- dark-themed HTML reports for the team
 
-## Install
+## Quick start
 
-```sh
-npm install @grainulation/harvest
-```
-
-Or run directly:
-
-```sh
-npx @grainulation/harvest analyze ./sprints/
-```
-
-## Usage
-
-```sh
+```bash
 # Cross-sprint claim analysis
 harvest analyze ./sprints/
 
@@ -56,46 +56,34 @@ harvest trends ./sprints/ --json
 
 Harvest reads standard wheat sprint data:
 
-- `claims.json` -- array of typed claims with `id`, `type`, `evidence`, `status`, `text`, `created`, etc.
+- `claims.json` -- array of typed claims with `id`, `type`, `evidence`, `status`, `text`, `created`
 - `compilation.json` -- compiled sprint state (optional, enriches analysis)
 - Git history on `claims.json` -- used for velocity and timing analysis
 
-Point harvest at a directory containing sprint subdirectories, or at a single sprint directory:
-
-```
-sprints/
-  sprint-alpha/
-    claims.json
-    compilation.json
-  sprint-beta/
-    claims.json
-```
+Point harvest at a directory containing sprint subdirectories, or at a single sprint directory.
 
 ## Design
 
-- **Zero dependencies** -- Node built-in modules only (fs, path, child_process)
 - **Reads, never writes** -- harvest is a pure analysis tool; it won't modify your sprint data
 - **Git-aware** -- uses git log timestamps for velocity analysis when available
 - **Composable** -- each module (analyzer, calibration, patterns, decay, velocity) works independently
 
-## Claim types it understands
+## Zero dependencies
 
-| Type | What it means |
-|---|---|
-| `constraint` | Hard requirements, non-negotiable |
-| `factual` | Verifiable statements |
-| `estimate` | Predictions, projections, ranges |
-| `risk` | Potential failure modes |
-| `recommendation` | Proposed courses of action |
-| `feedback` | Stakeholder input |
+Node built-in modules only.
 
-## Evidence tiers (lowest to highest)
+## Part of the grainulation ecosystem
 
-1. `stated` -- someone said it
-2. `web` -- found online
-3. `documented` -- in source code or official docs
-4. `tested` -- verified via prototype or benchmark
-5. `production` -- measured from live systems
+| Tool | Role |
+|------|------|
+| [wheat](https://github.com/grainulation/wheat) | Research engine -- grow structured evidence |
+| [farmer](https://github.com/grainulation/farmer) | Permission dashboard -- approve AI actions in real time |
+| [barn](https://github.com/grainulation/barn) | Shared tools -- templates, validators, sprint detection |
+| [mill](https://github.com/grainulation/mill) | Format conversion -- export to PDF, CSV, slides, 24 formats |
+| [silo](https://github.com/grainulation/silo) | Knowledge storage -- reusable claim libraries and packs |
+| **harvest** | Analytics -- cross-sprint patterns and prediction scoring |
+| [orchard](https://github.com/grainulation/orchard) | Orchestration -- multi-sprint coordination and dependencies |
+| [grainulation](https://github.com/grainulation/grainulation) | Unified CLI -- single entry point to the ecosystem |
 
 ## License
 
