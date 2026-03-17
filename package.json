@@ -17,7 +17,7 @@
     "harvest": "bin/harvest.js"
   },
   "scripts": {
-    "test": "node --test test/basic.test.js",
+    "test": "node --test test/basic.test.cjs",
     "start": "node bin/harvest.js"
   },
   "keywords": [
