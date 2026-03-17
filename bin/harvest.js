@@ -11,6 +11,7 @@ const { detectPatterns } = require('../lib/patterns.js');
 const { checkDecay } = require('../lib/decay.js');
 const { measureVelocity } = require('../lib/velocity.js');
 const { generateReport } = require('../lib/report.js');
+const { connect: farmerConnect } = require('../lib/farmer.js');
 
 const verbose = process.argv.includes('--verbose') || process.argv.includes('-v');
 function vlog(...a) {
@@ -31,6 +32,7 @@ Usage:
   harvest report <sprints-dir> [-o <output>]  Generate retrospective HTML
   harvest trends <sprints-dir>        All analyses in one pass
   harvest serve [--port 9096] [--root <sprints-dir>]  Start the dashboard UI
+  harvest connect farmer [--url <url>]               Configure farmer integration
 
 Options:
   -o, --output <path>   Output file path (default: stdout or ./retrospective.html)
@@ -49,7 +51,7 @@ function parseArgs(argv) {
   }
 
   parsed.command = args[0];
-  parsed.dir = args[1] ? path.resolve(args[1]) : null;
+  parsed.dir = (args[1] && !args[1].startsWith('-')) ? path.resolve(args[1]) : null;
 
   for (let i = 2; i < args.length; i++) {
     if ((args[i] === '-o' || args[i] === '--output') && args[i + 1]) {
@@ -71,25 +73,39 @@ function loadSprintData(dir) {
   }
 
   const sprints = [];
-  const stat = fs.statSync(dir);
 
-  // If dir itself contains claims.json, treat it as a single sprint
+  // Include root if it has claims.json
   const directClaims = path.join(dir, 'claims.json');
   if (fs.existsSync(directClaims)) {
     sprints.push(loadSingleSprint(dir));
-    return sprints;
   }
 
-  // Otherwise scan subdirectories for sprint data
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
-    const sprintDir = path.join(dir, entry.name);
-    const claimsPath = path.join(sprintDir, 'claims.json');
-    if (fs.existsSync(claimsPath)) {
-      sprints.push(loadSingleSprint(sprintDir));
+  // Scan subdirectories (two levels deep to catch sprints/<name>/claims.json)
+  try {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      if (entry.name.startsWith('.')) continue;
+      const childDir = path.join(dir, entry.name);
+      const childClaims = path.join(childDir, 'claims.json');
+      if (fs.existsSync(childClaims)) {
+        sprints.push(loadSingleSprint(childDir));
+      }
+      // Second level
+      try {
+        const subEntries = fs.readdirSync(childDir, { withFileTypes: true });
+        for (const sub of subEntries) {
+          if (!sub.isDirectory()) continue;
+          if (sub.name.startsWith('.')) continue;
+          const subDir = path.join(childDir, sub.name);
+          const subClaims = path.join(subDir, 'claims.json');
+          if (fs.existsSync(subClaims)) {
+            sprints.push(loadSingleSprint(subDir));
+          }
+        }
+      } catch { /* skip */ }
     }
-  }
+  } catch { /* skip */ }
 
   if (sprints.length === 0) {
     console.error(`harvest: no sprint data found in ${dir}`);
@@ -215,6 +231,13 @@ async function main() {
   if (opts.command === 'help') {
     console.log(USAGE);
     process.exit(0);
+  }
+
+  if (opts.command === 'connect') {
+    // Forward remaining args to farmer connect handler
+    const connectArgs = process.argv.slice(process.argv.indexOf('connect') + 1);
+    await farmerConnect(opts.dir || process.cwd(), connectArgs);
+    return;
   }
 
   if (opts.command === 'serve') {
