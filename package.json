@@ -1,8 +1,18 @@
 {
   "name": "@grainulation/harvest",
   "version": "1.0.0",
+  "type": "module",
   "description": "Analytics and retrospective layer for research sprints -- learn from every decision you've made",
   "main": "lib/analyzer.js",
+  "exports": {
+    ".": "./lib/analyzer.js",
+    "./server": "./lib/server.js",
+    "./calibration": "./lib/calibration.js",
+    "./decay": "./lib/decay.js",
+    "./patterns": "./lib/patterns.js",
+    "./velocity": "./lib/velocity.js",
+    "./package.json": "./package.json"
+  },
   "bin": {
     "harvest": "bin/harvest.js"
   },
