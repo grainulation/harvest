@@ -1,10 +1,10 @@
 {
   "name": "@grainulation/harvest",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Analytics and retrospective layer for research sprints -- learn from every decision you've made",
   "main": "lib/analyzer.js",
   "bin": {
-    "harvest": "./bin/harvest.js"
+    "harvest": "bin/harvest.js"
   },
   "scripts": {
     "test": "node --test test/basic.test.js",
@@ -33,6 +33,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/grainulation/harvest.git"
-  }
+    "url": "git+https://github.com/grainulation/harvest.git"
+  },
+  "bugs": {
+    "url": "https://github.com/grainulation/harvest/issues"
+  },
+  "homepage": "https://harvest.grainulation.com"
 }
