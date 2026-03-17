@@ -267,6 +267,8 @@ async function main() {
       process.exit(1);
     });
     child.on('exit', (code) => process.exit(code || 0));
+    process.on('SIGTERM', () => child.kill('SIGTERM'));
+    process.on('SIGINT', () => child.kill('SIGINT'));
     return;
   }
 
