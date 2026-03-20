@@ -54,6 +54,12 @@ harvest report ./sprints/ -o retrospective.html
 
 # All analyses in one pass
 harvest trends ./sprints/ --json
+
+# Start the live dashboard (SSE updates, dark theme)
+harvest serve --root ./sprints/ --port 9096
+
+# Connect to farmer for mobile monitoring
+harvest connect farmer --url http://localhost:9094
 ```
 
 ## Data format
