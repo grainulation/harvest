@@ -10,6 +10,10 @@
     "./decay": "./lib/decay.js",
     "./patterns": "./lib/patterns.js",
     "./velocity": "./lib/velocity.js",
+    "./tokens": "./lib/tokens.js",
+    "./token-tracker": "./lib/token-tracker.js",
+    "./wrapped": "./lib/wrapped.js",
+    "./harvest-card": "./lib/harvest-card.js",
     "./package.json": "./package.json"
   },
   "bin": {

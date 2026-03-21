@@ -8,10 +8,14 @@ const fs = require('node:fs');
 const { analyze } = require('../lib/analyzer.js');
 const { calibrate } = require('../lib/calibration.js');
 const { detectPatterns } = require('../lib/patterns.js');
-const { checkDecay } = require('../lib/decay.js');
+const { checkDecay, decayAlerts } = require('../lib/decay.js');
 const { measureVelocity } = require('../lib/velocity.js');
 const { generateReport } = require('../lib/report.js');
 const { connect: farmerConnect } = require('../lib/farmer.js');
+const { analyzeTokens } = require('../lib/tokens.js');
+const { trackCosts } = require('../lib/token-tracker.js');
+const { generateWrapped } = require('../lib/wrapped.js');
+const { generateCard, generateEmbedSnippet } = require('../lib/harvest-card.js');
 
 const verbose = process.argv.includes('--verbose') || process.argv.includes('-v');
 function vlog(...a) {
@@ -29,8 +33,11 @@ Usage:
   harvest patterns <sprints-dir>      Detect decision patterns
   harvest decay <sprints-dir>         Find claims that need refreshing
   harvest velocity <sprints-dir>      Sprint timing and phase analysis
+  harvest tokens <sprints-dir>        Token cost tracking and efficiency
+  harvest card <sprints-dir> [-o <output>]  Generate Harvest Report SVG card
   harvest report <sprints-dir> [-o <output>]  Generate retrospective HTML
   harvest trends <sprints-dir>        All analyses in one pass
+  harvest intelligence <sprints-dir>  Full intelligence report (all features)
   harvest serve [--port 9096] [--root <sprints-dir>]  Start the dashboard UI
   harvest connect farmer [--url <url>]               Configure farmer integration
 
@@ -210,10 +217,46 @@ async function main() {
         patternsFn: detectPatterns,
         decayFn: checkDecay,
         velocityFn: measureVelocity,
+        tokensFn: analyzeTokens,
+        wrappedFn: generateWrapped,
       });
       const outPath = opts.output || path.join(process.cwd(), 'retrospective.html');
       fs.writeFileSync(outPath, html, 'utf8');
       console.log(`Retrospective written to ${outPath}`);
+    },
+    tokens() {
+      const sprints = loadSprintData(opts.dir);
+      const result = analyzeTokens(sprints);
+      output(result, opts);
+    },
+    card() {
+      const sprints = loadSprintData(opts.dir);
+      const { svg, stats } = generateCard(sprints);
+
+      if (opts.json) {
+        output(stats, opts);
+        return;
+      }
+
+      const outPath = opts.output || path.join(process.cwd(), 'harvest-card.svg');
+      fs.writeFileSync(outPath, svg, 'utf8');
+      const embed = generateEmbedSnippet(path.basename(outPath));
+      console.log(`Harvest card written to ${outPath}`);
+      console.log(`\nEmbed in README:\n  ${embed.markdown}`);
+      console.log(`\nHTML:\n  ${embed.html}`);
+    },
+    intelligence() {
+      const sprints = loadSprintData(opts.dir);
+      const result = {
+        analysis: analyze(sprints),
+        calibration: calibrate(sprints),
+        patterns: detectPatterns(sprints),
+        decay: checkDecay(sprints, { thresholdDays: opts.days }),
+        decayAlerts: decayAlerts(sprints),
+        velocity: measureVelocity(sprints),
+        tokens: analyzeTokens(sprints),
+      };
+      output(result, opts);
     },
     trends() {
       const sprints = loadSprintData(opts.dir);
