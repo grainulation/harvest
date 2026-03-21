@@ -1,27 +1,31 @@
 #!/usr/bin/env node
 
-'use strict';
+"use strict";
 
-const path = require('node:path');
-const fs = require('node:fs');
+const path = require("node:path");
+const fs = require("node:fs");
 
-const { analyze } = require('../lib/analyzer.js');
-const { calibrate } = require('../lib/calibration.js');
-const { detectPatterns } = require('../lib/patterns.js');
-const { checkDecay, decayAlerts } = require('../lib/decay.js');
-const { measureVelocity } = require('../lib/velocity.js');
-const { generateReport } = require('../lib/report.js');
-const { connect: farmerConnect } = require('../lib/farmer.js');
-const { analyzeTokens } = require('../lib/tokens.js');
-const { trackCosts } = require('../lib/token-tracker.js');
-const { generateWrapped } = require('../lib/wrapped.js');
-const { generateCard, generateEmbedSnippet } = require('../lib/harvest-card.js');
+const { analyze } = require("../lib/analyzer.js");
+const { calibrate } = require("../lib/calibration.js");
+const { detectPatterns } = require("../lib/patterns.js");
+const { checkDecay, decayAlerts } = require("../lib/decay.js");
+const { measureVelocity } = require("../lib/velocity.js");
+const { generateReport } = require("../lib/report.js");
+const { connect: farmerConnect } = require("../lib/farmer.js");
+const { analyzeTokens } = require("../lib/tokens.js");
+const { trackCosts } = require("../lib/token-tracker.js");
+const { generateWrapped } = require("../lib/wrapped.js");
+const {
+  generateCard,
+  generateEmbedSnippet,
+} = require("../lib/harvest-card.js");
 
-const verbose = process.argv.includes('--verbose') || process.argv.includes('-v');
+const verbose =
+  process.argv.includes("--verbose") || process.argv.includes("-v");
 function vlog(...a) {
   if (!verbose) return;
   const ts = new Date().toISOString();
-  process.stderr.write(`[${ts}] harvest: ${a.join(' ')}\n`);
+  process.stderr.write(`[${ts}] harvest: ${a.join(" ")}\n`);
 }
 
 const USAGE = `
@@ -50,22 +54,29 @@ Options:
 
 function parseArgs(argv) {
   const args = argv.slice(2);
-  const parsed = { command: null, dir: null, output: null, json: false, days: 90 };
+  const parsed = {
+    command: null,
+    dir: null,
+    output: null,
+    json: false,
+    days: 90,
+  };
 
-  if (args.length === 0 || args.includes('-h') || args.includes('--help')) {
+  if (args.length === 0 || args.includes("-h") || args.includes("--help")) {
     console.log(USAGE);
     process.exit(0);
   }
 
   parsed.command = args[0];
-  parsed.dir = (args[1] && !args[1].startsWith('-')) ? path.resolve(args[1]) : null;
+  parsed.dir =
+    args[1] && !args[1].startsWith("-") ? path.resolve(args[1]) : null;
 
   for (let i = 2; i < args.length; i++) {
-    if ((args[i] === '-o' || args[i] === '--output') && args[i + 1]) {
+    if ((args[i] === "-o" || args[i] === "--output") && args[i + 1]) {
       parsed.output = path.resolve(args[++i]);
-    } else if (args[i] === '--json') {
+    } else if (args[i] === "--json") {
       parsed.json = true;
-    } else if (args[i] === '--days' && args[i + 1]) {
+    } else if (args[i] === "--days" && args[i + 1]) {
       parsed.days = parseInt(args[++i], 10);
     }
   }
@@ -82,7 +93,7 @@ function loadSprintData(dir) {
   const sprints = [];
 
   // Include root if it has claims.json
-  const directClaims = path.join(dir, 'claims.json');
+  const directClaims = path.join(dir, "claims.json");
   if (fs.existsSync(directClaims)) {
     sprints.push(loadSingleSprint(dir));
   }
@@ -92,9 +103,9 @@ function loadSprintData(dir) {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {
       if (!entry.isDirectory()) continue;
-      if (entry.name.startsWith('.')) continue;
+      if (entry.name.startsWith(".")) continue;
       const childDir = path.join(dir, entry.name);
-      const childClaims = path.join(childDir, 'claims.json');
+      const childClaims = path.join(childDir, "claims.json");
       if (fs.existsSync(childClaims)) {
         sprints.push(loadSingleSprint(childDir));
       }
@@ -103,20 +114,26 @@ function loadSprintData(dir) {
         const subEntries = fs.readdirSync(childDir, { withFileTypes: true });
         for (const sub of subEntries) {
           if (!sub.isDirectory()) continue;
-          if (sub.name.startsWith('.')) continue;
+          if (sub.name.startsWith(".")) continue;
           const subDir = path.join(childDir, sub.name);
-          const subClaims = path.join(subDir, 'claims.json');
+          const subClaims = path.join(subDir, "claims.json");
           if (fs.existsSync(subClaims)) {
             sprints.push(loadSingleSprint(subDir));
           }
         }
-      } catch { /* skip */ }
+      } catch {
+        /* skip */
+      }
     }
-  } catch { /* skip */ }
+  } catch {
+    /* skip */
+  }
 
   if (sprints.length === 0) {
     console.error(`harvest: no sprint data found in ${dir}`);
-    console.error('Expected claims.json in the directory or its subdirectories.');
+    console.error(
+      "Expected claims.json in the directory or its subdirectories.",
+    );
     process.exit(1);
   }
 
@@ -132,9 +149,9 @@ function loadSingleSprint(dir) {
     gitLog: null,
   };
 
-  const claimsPath = path.join(dir, 'claims.json');
+  const claimsPath = path.join(dir, "claims.json");
   try {
-    sprint.claims = JSON.parse(fs.readFileSync(claimsPath, 'utf8'));
+    sprint.claims = JSON.parse(fs.readFileSync(claimsPath, "utf8"));
     if (!Array.isArray(sprint.claims)) {
       // Handle { claims: [...] } wrapper
       sprint.claims = sprint.claims.claims || [];
@@ -143,10 +160,10 @@ function loadSingleSprint(dir) {
     console.error(`harvest: could not parse ${claimsPath}: ${e.message}`);
   }
 
-  const compilationPath = path.join(dir, 'compilation.json');
+  const compilationPath = path.join(dir, "compilation.json");
   if (fs.existsSync(compilationPath)) {
     try {
-      sprint.compilation = JSON.parse(fs.readFileSync(compilationPath, 'utf8'));
+      sprint.compilation = JSON.parse(fs.readFileSync(compilationPath, "utf8"));
     } catch (e) {
       // skip
     }
@@ -154,14 +171,23 @@ function loadSingleSprint(dir) {
 
   // Try to read git log for the sprint directory
   try {
-    const { execSync } = require('node:child_process');
+    const { execSync } = require("node:child_process");
     sprint.gitLog = execSync(
       `git log --oneline --format="%H|%ai|%s" -- claims.json`,
-      { cwd: dir, encoding: 'utf8', timeout: 5000, stdio: ['pipe', 'pipe', 'pipe'] }
-    ).trim().split('\n').filter(Boolean).map(line => {
-      const [hash, date, ...msg] = line.split('|');
-      return { hash, date, message: msg.join('|') };
-    });
+      {
+        cwd: dir,
+        encoding: "utf8",
+        timeout: 5000,
+        stdio: ["pipe", "pipe", "pipe"],
+      },
+    )
+      .trim()
+      .split("\n")
+      .filter(Boolean)
+      .map((line) => {
+        const [hash, date, ...msg] = line.split("|");
+        return { hash, date, message: msg.join("|") };
+      });
   } catch (e) {
     sprint.gitLog = [];
   }
@@ -172,7 +198,7 @@ function loadSingleSprint(dir) {
 function output(result, opts) {
   if (opts.json) {
     console.log(JSON.stringify(result, null, 2));
-  } else if (typeof result === 'string') {
+  } else if (typeof result === "string") {
     console.log(result);
   } else {
     console.log(JSON.stringify(result, null, 2));
@@ -181,7 +207,11 @@ function output(result, opts) {
 
 async function main() {
   const opts = parseArgs(process.argv);
-  vlog('startup', `command=${opts.command || '(none)'}`, `dir=${opts.dir || 'none'}`);
+  vlog(
+    "startup",
+    `command=${opts.command || "(none)"}`,
+    `dir=${opts.dir || "none"}`,
+  );
 
   const commands = {
     analyze() {
@@ -220,8 +250,9 @@ async function main() {
         tokensFn: analyzeTokens,
         wrappedFn: generateWrapped,
       });
-      const outPath = opts.output || path.join(process.cwd(), 'retrospective.html');
-      fs.writeFileSync(outPath, html, 'utf8');
+      const outPath =
+        opts.output || path.join(process.cwd(), "retrospective.html");
+      fs.writeFileSync(outPath, html, "utf8");
       console.log(`Retrospective written to ${outPath}`);
     },
     tokens() {
@@ -238,8 +269,9 @@ async function main() {
         return;
       }
 
-      const outPath = opts.output || path.join(process.cwd(), 'harvest-card.svg');
-      fs.writeFileSync(outPath, svg, 'utf8');
+      const outPath =
+        opts.output || path.join(process.cwd(), "harvest-card.svg");
+      fs.writeFileSync(outPath, svg, "utf8");
       const embed = generateEmbedSnippet(path.basename(outPath));
       console.log(`Harvest card written to ${outPath}`);
       console.log(`\nEmbed in README:\n  ${embed.markdown}`);
@@ -271,47 +303,47 @@ async function main() {
     },
   };
 
-  if (opts.command === 'help') {
+  if (opts.command === "help") {
     console.log(USAGE);
     process.exit(0);
   }
 
-  if (opts.command === 'connect') {
+  if (opts.command === "connect") {
     // Forward remaining args to farmer connect handler
-    const connectArgs = process.argv.slice(process.argv.indexOf('connect') + 1);
+    const connectArgs = process.argv.slice(process.argv.indexOf("connect") + 1);
     await farmerConnect(opts.dir || process.cwd(), connectArgs);
     return;
   }
 
-  if (opts.command === 'serve') {
+  if (opts.command === "serve") {
     // Launch the ESM server module
-    const { execFile } = require('node:child_process');
-    const serverPath = path.join(__dirname, '..', 'lib', 'server.js');
+    const { execFile } = require("node:child_process");
+    const serverPath = path.join(__dirname, "..", "lib", "server.js");
     const serverArgs = [];
     // Forward --port and --root
-    const portIdx = process.argv.indexOf('--port');
+    const portIdx = process.argv.indexOf("--port");
     if (portIdx !== -1 && process.argv[portIdx + 1]) {
-      serverArgs.push('--port', process.argv[portIdx + 1]);
+      serverArgs.push("--port", process.argv[portIdx + 1]);
     }
-    const rootIdx = process.argv.indexOf('--root');
+    const rootIdx = process.argv.indexOf("--root");
     if (rootIdx !== -1 && process.argv[rootIdx + 1]) {
-      serverArgs.push('--root', process.argv[rootIdx + 1]);
+      serverArgs.push("--root", process.argv[rootIdx + 1]);
     } else if (opts.dir) {
-      serverArgs.push('--root', opts.dir);
+      serverArgs.push("--root", opts.dir);
     }
-    const child = execFile('node', [serverPath, ...serverArgs], {
-      stdio: 'inherit',
+    const child = execFile("node", [serverPath, ...serverArgs], {
+      stdio: "inherit",
       env: process.env,
     });
     child.stdout && child.stdout.pipe(process.stdout);
     child.stderr && child.stderr.pipe(process.stderr);
-    child.on('error', (err) => {
+    child.on("error", (err) => {
       console.error(`harvest: error starting server: ${err.message}`);
       process.exit(1);
     });
-    child.on('exit', (code) => process.exit(code || 0));
-    process.on('SIGTERM', () => child.kill('SIGTERM'));
-    process.on('SIGINT', () => child.kill('SIGINT'));
+    child.on("exit", (code) => process.exit(code || 0));
+    process.on("SIGTERM", () => child.kill("SIGTERM"));
+    process.on("SIGINT", () => child.kill("SIGINT"));
     return;
   }
 
