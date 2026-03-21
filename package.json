@@ -35,7 +35,9 @@
     "public/",
     "templates/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md"
   ],
   "engines": {
     "node": ">=18.0.0"
