@@ -84,16 +84,16 @@ Node built-in modules only.
 
 ## Part of the grainulation ecosystem
 
-| Tool | Role |
-|------|------|
-| [wheat](https://github.com/grainulation/wheat) | Research engine -- grow structured evidence |
-| [farmer](https://github.com/grainulation/farmer) | Permission dashboard -- approve AI actions in real time |
-| [barn](https://github.com/grainulation/barn) | Shared tools -- templates, validators, sprint detection |
-| [mill](https://github.com/grainulation/mill) | Format conversion -- export to PDF, CSV, slides, 24 formats |
-| [silo](https://github.com/grainulation/silo) | Knowledge storage -- reusable claim libraries and packs |
-| **harvest** | Analytics -- cross-sprint patterns and prediction scoring |
-| [orchard](https://github.com/grainulation/orchard) | Orchestration -- multi-sprint coordination and dependencies |
-| [grainulation](https://github.com/grainulation/grainulation) | Unified CLI -- single entry point to the ecosystem |
+| Tool                                                         | Role                                                        |
+| ------------------------------------------------------------ | ----------------------------------------------------------- |
+| [wheat](https://github.com/grainulation/wheat)               | Research engine -- grow structured evidence                 |
+| [farmer](https://github.com/grainulation/farmer)             | Permission dashboard -- approve AI actions in real time     |
+| [barn](https://github.com/grainulation/barn)                 | Shared tools -- templates, validators, sprint detection     |
+| [mill](https://github.com/grainulation/mill)                 | Format conversion -- export to PDF, CSV, slides, 24 formats |
+| [silo](https://github.com/grainulation/silo)                 | Knowledge storage -- reusable claim libraries and packs     |
+| **harvest**                                                  | Analytics -- cross-sprint patterns and prediction scoring   |
+| [orchard](https://github.com/grainulation/orchard)           | Orchestration -- multi-sprint coordination and dependencies |
+| [grainulation](https://github.com/grainulation/grainulation) | Unified CLI -- single entry point to the ecosystem          |
 
 ## License
 
