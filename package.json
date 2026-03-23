@@ -33,6 +33,7 @@
   ],
   "author": "grainulation contributors",
   "license": "MIT",
+	"type": "module",
   "files": [
     "bin/",
     "lib/",
