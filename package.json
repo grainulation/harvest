@@ -1,6 +1,6 @@
 {
   "name": "@grainulation/harvest",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Analytics and retrospective layer for research sprints -- learn from every decision you've made",
   "main": "lib/analyzer.js",
   "exports": {
@@ -33,7 +33,6 @@
   ],
   "author": "grainulation contributors",
   "license": "MIT",
-  "type": "module",
   "files": [
     "bin/",
     "lib/",
