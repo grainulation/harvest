@@ -20,7 +20,7 @@
     "harvest": "bin/harvest.js"
   },
   "scripts": {
-    "test": "node --test test/basic.test.js",
+    "test": "node --test test/basic.test.js test/report.test.js test/server.test.js test/token-tracker.test.js test/wrapped.test.js",
     "start": "node bin/harvest.js",
     "format": "npx prettier@3.3 --write .",
     "format:check": "npx prettier@3.3 --check ."
