@@ -26,9 +26,6 @@
     "format": "npx prettier@3.3 --write .",
     "format:check": "npx prettier@3.3 --check ."
   },
-  "dependencies": {
-    "@grainulation/barn": "^1.2.1"
-  },
   "keywords": [
     "analytics",
     "retrospective",
@@ -63,5 +60,8 @@
   "homepage": "https://harvest.grainulation.com",
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@grainulation/barn": "^1.2.1"
   }
 }
