@@ -307,6 +307,12 @@ async function main() {
     process.exit(0);
   }
 
+  if (opts.command === "--version") {
+    const pkg = require("../package.json");
+    console.log(pkg.version);
+    process.exit(0);
+  }
+
   if (opts.command === "connect") {
     // Forward remaining args to farmer connect handler
     const connectArgs = process.argv.slice(process.argv.indexOf("connect") + 1);
