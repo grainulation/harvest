@@ -321,34 +321,30 @@ async function main() {
   }
 
   if (opts.command === "serve") {
-    // Launch the ESM server module
-    const { execFile } = require("node:child_process");
-    const serverPath = path.join(__dirname, "..", "lib", "server.js");
-    const serverArgs = [];
-    // Forward --port and --root
+    // Launch the ESM server module in-process via dynamic import.
+    // start() installs its own SIGTERM/SIGINT handlers and crash handlers.
     const portIdx = process.argv.indexOf("--port");
-    if (portIdx !== -1 && process.argv[portIdx + 1]) {
-      serverArgs.push("--port", process.argv[portIdx + 1]);
-    }
     const rootIdx = process.argv.indexOf("--root");
-    if (rootIdx !== -1 && process.argv[rootIdx + 1]) {
-      serverArgs.push("--root", process.argv[rootIdx + 1]);
-    } else if (opts.dir) {
-      serverArgs.push("--root", opts.dir);
-    }
-    const child = execFile("node", [serverPath, ...serverArgs], {
-      stdio: "inherit",
-      env: process.env,
-    });
-    child.stdout && child.stdout.pipe(process.stdout);
-    child.stderr && child.stderr.pipe(process.stderr);
-    child.on("error", (err) => {
+    const corsIdx = process.argv.indexOf("--cors");
+    const port =
+      portIdx !== -1 && process.argv[portIdx + 1]
+        ? parseInt(process.argv[portIdx + 1], 10)
+        : 9096;
+    const root =
+      rootIdx !== -1 && process.argv[rootIdx + 1]
+        ? process.argv[rootIdx + 1]
+        : opts.dir || process.cwd();
+    const corsOrigin =
+      corsIdx !== -1 && process.argv[corsIdx + 1]
+        ? process.argv[corsIdx + 1]
+        : null;
+    try {
+      const { start } = await import("../lib/server.js");
+      start({ port, root, corsOrigin, verbose });
+    } catch (err) {
       console.error(`harvest: error starting server: ${err.message}`);
       process.exit(1);
-    });
-    child.on("exit", (code) => process.exit(code || 0));
-    process.on("SIGTERM", () => child.kill("SIGTERM"));
-    process.on("SIGINT", () => child.kill("SIGINT"));
+    }
     return;
   }
 
