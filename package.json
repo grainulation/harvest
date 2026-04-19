@@ -21,7 +21,9 @@
   },
   "scripts": {
     "test": "node --test test/basic.test.js",
-    "start": "node bin/harvest.js"
+    "start": "node bin/harvest.js",
+    "format": "npx prettier@3.3 --write .",
+    "format:check": "npx prettier@3.3 --check ."
   },
   "dependencies": {
     "@grainulation/barn": "^1.2.0"
