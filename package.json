@@ -55,5 +55,8 @@
   "bugs": {
     "url": "https://github.com/grainulation/harvest/issues"
   },
-  "homepage": "https://harvest.grainulation.com"
+  "homepage": "https://harvest.grainulation.com",
+  "publishConfig": {
+    "access": "public"
+  }
 }

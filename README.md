@@ -79,9 +79,9 @@ Point harvest at a directory containing sprint subdirectories, or at a single sp
 - **Git-aware** -- uses git log timestamps for velocity analysis when available
 - **Composable** -- each module (analyzer, calibration, patterns, decay, velocity) works independently
 
-## Zero dependencies
+## Zero third-party dependencies
 
-Node built-in modules only.
+Depends only on `@grainulation/barn` (internal ecosystem utilities); no third-party runtime deps. Node built-ins otherwise.
 
 ## Part of the grainulation ecosystem
 
