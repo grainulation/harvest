@@ -3,7 +3,7 @@
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 
 import { analyze } from "../lib/analyzer.js";
 import { calibrate } from "../lib/calibration.js";
@@ -170,8 +170,10 @@ function loadSingleSprint(dir) {
 
   // Try to read git log for the sprint directory
   try {
-    sprint.gitLog = execSync(
-      `git log --oneline --format="%H|%ai|%s" -- claims.json`,
+    // execFile (no shell) — user-controlled cwd can't inject into argv.
+    sprint.gitLog = execFileSync(
+      "git",
+      ["log", "--oneline", "--format=%H|%ai|%s", "--", "claims.json"],
       {
         cwd: dir,
         encoding: "utf8",
