@@ -1,6 +1,6 @@
 {
   "name": "@grainulation/harvest",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Analytics and retrospective layer for research sprints -- learn from every decision you've made",
   "type": "module",
   "main": "lib/analyzer.js",
