@@ -1,29 +1,19 @@
-"use strict";
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
 
-const { describe, it } = require("node:test");
-const assert = require("node:assert/strict");
-
-const { analyze } = require("../lib/analyzer.js");
-const { calibrate } = require("../lib/calibration.js");
-const { detectPatterns } = require("../lib/patterns.js");
-const {
-  checkDecay,
-  decayAlerts,
-  DEFAULT_HALF_LIVES,
-} = require("../lib/decay.js");
-const { measureVelocity } = require("../lib/velocity.js");
-const {
-  analyzeTokens,
-  computeCost,
-  DEFAULT_PRICING,
-} = require("../lib/tokens.js");
-const {
+import { analyze } from "../lib/analyzer.js";
+import { calibrate } from "../lib/calibration.js";
+import { detectPatterns } from "../lib/patterns.js";
+import { checkDecay, decayAlerts, DEFAULT_HALF_LIVES } from "../lib/decay.js";
+import { measureVelocity } from "../lib/velocity.js";
+import { analyzeTokens, computeCost, DEFAULT_PRICING } from "../lib/tokens.js";
+import {
   generateCard,
   computeReportStats,
   getSeason,
   detectArchetype,
   detectMilestones,
-} = require("../lib/harvest-card.js");
+} from "../lib/harvest-card.js";
 
 // --- Test fixtures ---
 

@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Unit tests: lib/wrapped.js
  *
@@ -13,15 +11,15 @@
  *   - tokenSummary integration when a token report is passed in
  */
 
-const { describe, it } = require("node:test");
-const assert = require("node:assert/strict");
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
 
-const {
+import {
   generateWrapped,
   computeWrappedStats,
   detectPersonality,
   ARCHETYPES,
-} = require("../lib/wrapped.js");
+} from "../lib/wrapped.js";
 
 const NOW = new Date().toISOString();
 

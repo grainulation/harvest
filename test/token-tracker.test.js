@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Unit tests: lib/token-tracker.js
  *
@@ -12,18 +10,18 @@
  * All disk I/O uses a per-test tempdir — no user-state pollution.
  */
 
-const { describe, it, beforeEach, afterEach } = require("node:test");
-const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const path = require("node:path");
-const os = require("node:os");
+import { describe, it, beforeEach, afterEach } from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import os from "node:os";
 
-const {
+import {
   loadOutcomes,
   appendOutcome,
   trackCosts,
   OUTCOMES_FILE,
-} = require("../lib/token-tracker.js");
+} from "../lib/token-tracker.js";
 
 let dir;
 

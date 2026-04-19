@@ -1,26 +1,26 @@
 #!/usr/bin/env node
 
-"use strict";
+import path from "node:path";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import { execSync } from "node:child_process";
 
-const path = require("node:path");
-const fs = require("node:fs");
+import { analyze } from "../lib/analyzer.js";
+import { calibrate } from "../lib/calibration.js";
+import { detectPatterns } from "../lib/patterns.js";
+import { checkDecay, decayAlerts } from "../lib/decay.js";
+import { measureVelocity } from "../lib/velocity.js";
+import { generateReport } from "../lib/report.js";
+import { connect as farmerConnect } from "../lib/farmer.js";
+import { analyzeTokens } from "../lib/tokens.js";
+import { trackCosts } from "../lib/token-tracker.js";
+import { generateWrapped } from "../lib/wrapped.js";
+import { generateCard, generateEmbedSnippet } from "../lib/harvest-card.js";
 
-const { analyze } = require("../lib/analyzer.js");
-const { calibrate } = require("../lib/calibration.js");
-const { detectPatterns } = require("../lib/patterns.js");
-const { checkDecay, decayAlerts } = require("../lib/decay.js");
-const { measureVelocity } = require("../lib/velocity.js");
-const { generateReport } = require("../lib/report.js");
-const { connect: farmerConnect } = require("../lib/farmer.js");
-const { analyzeTokens } = require("../lib/tokens.js");
-const { trackCosts } = require("../lib/token-tracker.js");
-const { generateWrapped } = require("../lib/wrapped.js");
-const {
-  generateCard,
-  generateEmbedSnippet,
-} = require("../lib/harvest-card.js");
+import { setVerbose, vlog as barnVlog } from "@grainulation/barn/cli";
 
-const { setVerbose, vlog: barnVlog } = require("@grainulation/barn/cli");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const verbose =
   process.argv.includes("--verbose") || process.argv.includes("-v");
@@ -163,14 +163,13 @@ function loadSingleSprint(dir) {
   if (fs.existsSync(compilationPath)) {
     try {
       sprint.compilation = JSON.parse(fs.readFileSync(compilationPath, "utf8"));
-    } catch (e) {
+    } catch {
       // skip
     }
   }
 
   // Try to read git log for the sprint directory
   try {
-    const { execSync } = require("node:child_process");
     sprint.gitLog = execSync(
       `git log --oneline --format="%H|%ai|%s" -- claims.json`,
       {
@@ -187,7 +186,7 @@ function loadSingleSprint(dir) {
         const [hash, date, ...msg] = line.split("|");
         return { hash, date, message: msg.join("|") };
       });
-  } catch (e) {
+  } catch {
     sprint.gitLog = [];
   }
 
@@ -308,7 +307,9 @@ async function main() {
   }
 
   if (opts.command === "--version") {
-    const pkg = require("../package.json");
+    const pkg = JSON.parse(
+      fs.readFileSync(path.join(__dirname, "..", "package.json"), "utf-8"),
+    );
     console.log(pkg.version);
     process.exit(0);
   }

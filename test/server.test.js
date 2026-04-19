@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Unit tests: lib/server.js
  *
@@ -19,12 +17,13 @@
  *   - directory-traversal in static paths is rejected with 403
  */
 
-const { describe, it, before, after } = require("node:test");
-const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const path = require("node:path");
-const os = require("node:os");
-const http = require("node:http");
+import { describe, it, before, after } from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import os from "node:os";
+import http from "node:http";
+import net from "node:net";
 
 function get(port, urlPath, extraHeaders = {}) {
   return new Promise((resolve, reject) => {
@@ -191,14 +190,9 @@ describe("server: start() happy path", () => {
   it("rejects directory-traversal in static paths with 403", async () => {
     // raw socket so node doesn't normalize ".." away in the URL
     const body = await new Promise((resolve) => {
-      const sock = require("node:net").createConnection(
-        { host: "127.0.0.1", port },
-        () => {
-          sock.write(
-            "GET /../../etc/passwd HTTP/1.0\r\nHost: localhost\r\n\r\n",
-          );
-        },
-      );
+      const sock = net.createConnection({ host: "127.0.0.1", port }, () => {
+        sock.write("GET /../../etc/passwd HTTP/1.0\r\nHost: localhost\r\n\r\n");
+      });
       const chunks = [];
       sock.on("data", (c) => chunks.push(c));
       sock.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));

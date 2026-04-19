@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Unit tests: lib/report.js
  *
@@ -17,17 +15,17 @@
  *   - XSS: claim content is HTML-escaped (no unescaped <script>)
  */
 
-const { describe, it } = require("node:test");
-const assert = require("node:assert/strict");
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
 
-const { generateReport } = require("../lib/report.js");
-const { analyze } = require("../lib/analyzer.js");
-const { calibrate } = require("../lib/calibration.js");
-const { detectPatterns } = require("../lib/patterns.js");
-const { checkDecay } = require("../lib/decay.js");
-const { measureVelocity } = require("../lib/velocity.js");
-const { analyzeTokens } = require("../lib/tokens.js");
-const { generateWrapped } = require("../lib/wrapped.js");
+import { generateReport } from "../lib/report.js";
+import { analyze } from "../lib/analyzer.js";
+import { calibrate } from "../lib/calibration.js";
+import { detectPatterns } from "../lib/patterns.js";
+import { checkDecay } from "../lib/decay.js";
+import { measureVelocity } from "../lib/velocity.js";
+import { analyzeTokens } from "../lib/tokens.js";
+import { generateWrapped } from "../lib/wrapped.js";
 
 const NOW = new Date().toISOString();
 
