@@ -20,13 +20,12 @@ const {
   generateEmbedSnippet,
 } = require("../lib/harvest-card.js");
 
+const { setVerbose, vlog: barnVlog } = require("@grainulation/barn/cli");
+
 const verbose =
   process.argv.includes("--verbose") || process.argv.includes("-v");
-function vlog(...a) {
-  if (!verbose) return;
-  const ts = new Date().toISOString();
-  process.stderr.write(`[${ts}] harvest: ${a.join(" ")}\n`);
-}
+setVerbose(verbose);
+const vlog = (...a) => barnVlog("harvest:", ...a);
 
 const USAGE = `
 harvest -- learn from every decision you've made
