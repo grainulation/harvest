@@ -75,7 +75,7 @@
 <hr class="sep">
 <section class="quickstart" id="quickstart"><div class="container"><div class="qs-label rv">Quick start — 3 commands</div><div class="qs-steps">
   <div class="qs-step rv rv-d1"><div class="qs-num">1</div><h3>Analyze sprints</h3><p>Point <strong style="color:#fff;font-size:110%"><span style="color:var(--accent)">h</span>arvest</strong> at your sprints directory. It reads all claims and calculates accuracy metrics.</p><div class="copy-wrap"><pre class="qs-code"><code><span class="dim">$</span> npx @grainulation/harvest analyze ./sprints/</code></pre><button class="copy-btn" onclick="copyText(this,'npx @grainulation/harvest analyze ./sprints/')">Copy</button></div><div class="qs-output">Scanning 5 sprints, 127 total claims...
-  graphql-migration:  82% accuracy
+  consolidate-auth-to-monolith:  82% accuracy
   auth-scaling:       78% accuracy
   perf-baseline:      61% accuracy</div></div>
   <div class="qs-step rv rv-d2"><div class="qs-num">2</div><h3>Calibrate predictions</h3><p>Compare predictions against actual outcomes. Score your accuracy over time.</p><div class="copy-wrap"><pre class="qs-code"><code><span class="dim">$</span> npx @grainulation/harvest calibrate ./sprints/</code></pre><button class="copy-btn" onclick="copyText(this,'npx @grainulation/harvest calibrate ./sprints/')">Copy</button></div><div class="qs-output">Overconfident: perf-baseline (predicted 0.82, hit 61%)
