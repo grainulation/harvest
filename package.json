@@ -1,6 +1,6 @@
 {
   "name": "@grainulation/harvest",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Analytics and retrospective layer for research sprints -- learn from every decision you've made",
   "type": "module",
   "main": "lib/analyzer.js",
@@ -21,7 +21,7 @@
     "harvest": "bin/harvest.js"
   },
   "scripts": {
-    "test": "node --test test/basic.test.js test/report.test.js test/server.test.js test/token-tracker.test.js test/wrapped.test.js",
+    "test": "node --test test/basic.test.js test/report.test.js test/server.test.js test/token-tracker.test.js test/wrapped.test.js test/tarball.test.js",
     "start": "node bin/harvest.js",
     "format": "npx prettier@3.3 --write .",
     "format:check": "npx prettier@3.3 --check ."
@@ -39,6 +39,7 @@
   "files": [
     "bin/",
     "lib/",
+    "public/",
     "templates/",
     "README.md",
     "LICENSE",
